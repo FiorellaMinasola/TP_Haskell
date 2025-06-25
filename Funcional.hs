@@ -32,3 +32,19 @@ olvidarProgramas n robot = robot { programas = drop n (programas robot) }
 --error si no tiene ningún programa.
 autoAtaque :: Programa
 autoAtaque robot = (head (programas robot)) robot
+
+--mejorProgramaContra :: Robot -> Robot -> Programa
+--Elige el programa del segundo robot que cause mayor reducción de energía al primero.
+mejorProgramaContra :: Robot -> Robot -> Programa
+mejorProgramaContra objetivo atacante =foldr1 (\programa1 programa2 -> if daño objetivo programa1 >= daño objetivo programa2 then programa1 else programa2) (programas atacante)
+
+--mejorOponente :: Robot -> Academia -> Robot
+--Encuentra el robot con la mayor diferencia de poder respecto al robot recibido.
+mejorOponente :: Robot -> Academia -> Robot
+mejorOponente r = foldr1 (\robot1 robot2 -> if diferenciaDePoder r robot1 >= diferenciaDePoder r robot2 then robot1 else robot2)
+
+--Implementa la función noPuedeDerrotarle :: Robot -> Robot -> Bool
+--La condición es que, tras aplicar todos los programas que conoce al segundo robot, la 
+--energía del primero quede igual que antes, sin necesidad de usar recursividad.
+noPuedeDerrotarle :: Robot -> Robot -> Bool
+noPuedeDerrotarle atacante objetivo =energia objetivo == energia (foldl (\r prog -> prog r) objetivo (programas atacante))
