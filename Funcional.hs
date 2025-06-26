@@ -33,6 +33,25 @@ olvidarProgramas n robot = robot { programas = drop n (programas robot) }
 autoAtaque :: Programa
 autoAtaque robot = (head (programas robot)) robot
 
+--poder :: Robot -> Int
+--Calcula la fuerza de un robot sumando su energía más el producto de su nivel de experiencia 
+--por la cantidad de programas que tiene.
+poder :: Robot -> Int
+poder robot = energia robot + nivel robot * length (programas robot)
+
+--daño :: Robot -> Programa -> Int
+--Calcula cuánta energía se pierde o gana al aplicar un programa a un robot. La ganancia se 
+--indica con un número negativo. La función retorna 0 si no hay cambio.
+daño :: Robot -> Programa -> Int
+daño robot programa
+    | energia robot == energia (programa robot) = 0 
+    | otherwise = energia robot - energia (programa robot)
+
+--diferenciaDePoder :: Robot -> Robot -> Int
+--La diferencia absoluta en poder entre dos robots
+diferenciaDePoder :: Robot -> Robot -> Int
+diferenciaDePoder robot1 robot2 = abs (poder robot1 - poder robot2)
+
 --mejorProgramaContra :: Robot -> Robot -> Programa
 --Elige el programa del segundo robot que cause mayor reducción de energía al primero.
 mejorProgramaContra :: Robot -> Robot -> Programa
