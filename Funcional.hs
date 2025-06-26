@@ -52,6 +52,45 @@ daño robot programa
 diferenciaDePoder :: Robot -> Robot -> Int
 diferenciaDePoder robot1 robot2 = abs (poder robot1 - poder robot2)
 
+-- ¿Existe en la academia algun robot llamado "Atlas" que actualmente no tenga programas en su software?
+robotAtlas:: Academia -> Bool
+robotAtlas robots = any (\r -> nombre r == "Atlas" && length (programas r)==0) robots 
+
+-- ¿Todos los robots viejos (con experiencia mayor a 16) son considerados "obstinados", esto es, que 
+-- tengan mas programas que el triple de su nivel de experiencia?
+obstinado :: Academia -> [String]
+obstinado robots = map nombre (filter (\viejo -> nivel viejo > 16 && length (programas viejo) > 3 * nivel viejo) robots)
+
+
+f x [y] = y
+f x (y1:y2:ys)
+      | x y1 >= x y2 = f x (y1:ys)
+      | otherwise = f x (y2 : ys)
+--Explica brevemente cual es su proposito, define su tipo y presenta una version que sea 
+--mas expresiva en el paradigma funcional.
+
+-- RESPUESTA --
+
+-- 1. ¿Cual es su proposito?
+--Esta funcion recibe:
+--Una funcion x que mapea un elemento de tipo a a un valor comparable (que puede ordenarse) de tipo b.
+--Una lista no vacia de elementos [a].
+--Lo que hace es encontrar el elemento de la lista que maximiza el valor de x aplicado a ese elemento.
+--En otras palabras, devuelve el “mejor” elemento segun el criterio definido por x.
+--2. ¿Como funciona?
+--Caso base: si la lista tiene un solo elemento [y], devuelve ese elemento.
+--Caso recursivo:
+--Compara los valores x y1 y x y2.
+--Conserva el que tenga el mayor valor de x y continua la busqueda con el resto de la lista.
+--Esto va “peleando” entre los primeros dos elementos, descartando el “peor” segun x, y sigue 
+--hasta quedar con uno solo, el que tiene el valor maximo.
+
+maximoSegun :: Ord b => (a -> b) -> [a] -> a
+maximoSegun criterio [y] = y
+maximoSegun criterio (y1:y2:ys)
+  | criterio y1 >= criterio y2 = maximoSegun criterio (y1:ys)
+  | otherwise                  = maximoSegun criterio (y2:ys)
+
 --mejorProgramaContra :: Robot -> Robot -> Programa
 --Elige el programa del segundo robot que cause mayor reducción de energía al primero.
 mejorProgramaContra :: Robot -> Robot -> Programa
